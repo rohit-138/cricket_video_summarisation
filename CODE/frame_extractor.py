@@ -1,5 +1,5 @@
-import cv2
-import os
+import cv2#frame extraction
+import os#
 from tqdm import tqdm
 
 class FrameExtractor:
@@ -29,10 +29,9 @@ class FrameExtractor:
 
         while self.frame_count < frames_to_extract:
             ret, frame = self.cap.read()
-
             if not ret:
                 break
-
+            
             frame_filename = os.path.join(self.output_dir, f"frame_{self.frame_count:04d}.jpg")
             cv2.imwrite(frame_filename, frame)
 
