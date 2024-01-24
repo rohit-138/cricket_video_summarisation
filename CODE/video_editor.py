@@ -15,32 +15,40 @@ class VideoTrimmer:
     #         print(f"Trimmed video saved to {self.path}")
     #     except Exception as e:
     #         print(f"Error: {e}")
-    def trim_video(self,start_time, end_time,path):
-        
-        try:
+def trim_video(input_path, output_path, start_time, end_time):
+    # Open the video file
+    cap = cv2.VideoCapture(input_path)
 
-            if not os.path.exists(path):
-            # If not, create the directory
-                os.makedirs(path)
-                print(f"Directory created: {path}")
-            reader = imageio.get_reader(self.input_path, 'ffmpeg')
-            fps = reader.get_meta_data()['fps']
+    # Get video properties
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    # fourcc = int(cap.get(cv2.CAP_PROP_FOURCC))
 
-            start_frame = int(start_time * fps)
-            end_frame = int(end_time * fps)
+    # Calculate start and end frame numbers
+    start_frame = int(start_time * fps)
+    end_frame = int(end_time * fps)
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    # Create VideoWriter object
+    out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
-            writer = imageio.get_writer(path, fps=fps)
+    # Set the video capture position to the start frame
+    cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
 
-            for i, frame in enumerate(reader):
-                if start_frame <= i <= end_frame:
-                    writer.append_data(frame)
+    # Read and write frames until the end frame
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret or cap.get(cv2.CAP_PROP_POS_FRAMES) > end_frame:
+            break
 
-            writer.close()
+        # Write the frame to the output video
+        out.write(frame)
 
-            print(f"Trimmed video saved to {path}")
-        except Exception as e:
-            print(f"Error: {e}")
-# Example usage:
+    # Release video capture and writer objects
+    cap.release()
+    out.release()
+
+    print("Trimmed video saved at:", output_path)
 input_video_path = "D:\BE Final Year Project\inputs\eight.mp4"
 output_video_path = "D:\BE Final Year Project\output"
 # start_time_seconds = 10
