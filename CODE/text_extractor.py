@@ -4,10 +4,13 @@ import pytesseract
 import re
 from tqdm import tqdm
 import pandas as pd
-
+"""
+TODO
+separating runs and wickets only by - .try other symbols
+"""
 class TextExtractionUsingOCR:
-    def __init__(self, folder_path):
-        self.folder_path = folder_path
+    def __init__(self):
+        self.folder_path = "./runs/detect/predict/crops/scorecard"
         pytesseract.pytesseract.tesseract_cmd = (
             r"C:/Program Files/Tesseract-OCR/tesseract.exe"
         )
@@ -25,7 +28,6 @@ class TextExtractionUsingOCR:
                     if f.endswith((".png", ".jpg", ".jpeg"))
                 ]
             )
-
         for frame_name in tqdm(
             os.listdir(self.folder_path),
             total=total_frames,
@@ -36,7 +38,6 @@ class TextExtractionUsingOCR:
                 scorecard_text = self.extract_text(frame_path)
                 pattern = r"\b\s*\d+\s*-\s*\d+\b"
                 match = re.findall(pattern, scorecard_text)
-                
                 if len(match)>0:
                     match_split=match[0].split('-')
                     temp=[frame_name.split('_')[1][:-4], match_split[0],match_split[1]]
@@ -56,22 +57,16 @@ class TextExtractionUsingOCR:
         processed_data={'fours':increase_by_4['secs'].tolist(),'sixes': increase_by_6['secs'].tolist(),'wickets':increase_by_1['secs'].tolist()}
         return processed_data
 
-from video_editor import VideoTrimmer
+# from video_editor import VideoTrimmer
 def main():
-    frames_folder = (
-        "D:\BE Final Year Project\workspace/runs\detect\predict\crops\scorecard"
-    )
-    input_video_path = "D:\BE Final Year Project\inputs\eight.mp4"
-    output_video_path = "D:\BE Final Year Project\output"
-    # output_file_path="D:\BE Final Year Project\workspace\ocrouput\c.txt"
-    textextractor = TextExtractionUsingOCR(frames_folder)
+    textextractor = TextExtractionUsingOCR()
     data=textextractor.process_frames()
     print(data)
-    video_trimmer = VideoTrimmer(input_video_path, output_video_path)
-    for key,value in data.items():
-        for item in value:
-            filename=f"{key}/item"
-            path=os.path.join(output_video_path,key,value)
-            video_trimmer.trim_video(item-5, item+5,path)
+    # video_trimmer = VideoTrimmer(input_video_path, output_video_path)
+    # for key,value in data.items():
+    #     for item in value:
+    #         filename=f"{key}/item"
+    #         path=os.path.join(output_video_path,key,value)
+    #         video_trimmer.trim_video(item-5, item+5,path)
 if __name__ == "__main__":
     main()

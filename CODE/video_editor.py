@@ -1,6 +1,8 @@
 from moviepy.video.io.VideoFileClip import VideoFileClip
 import imageio
 import os
+import cv2
+
 class VideoTrimmer:
     def __init__(self, input_path):
         self.input_path = input_path
@@ -15,40 +17,45 @@ class VideoTrimmer:
     #         print(f"Trimmed video saved to {self.path}")
     #     except Exception as e:
     #         print(f"Error: {e}")
-def trim_video(input_path, output_path, start_time, end_time):
-    # Open the video file
-    cap = cv2.VideoCapture(input_path)
 
-    # Get video properties
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    # fourcc = int(cap.get(cv2.CAP_PROP_FOURCC))
 
-    # Calculate start and end frame numbers
-    start_frame = int(start_time * fps)
-    end_frame = int(end_time * fps)
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    # Create VideoWriter object
-    out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
+    
+    def trim_video(self,input_path, output_path, start_time, end_time):
+        # Open the video file
+        cap = cv2.VideoCapture(input_path)
 
-    # Set the video capture position to the start frame
-    cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+        # Get video properties
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        print(fps)
+        frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-    # Read and write frames until the end frame
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret or cap.get(cv2.CAP_PROP_POS_FRAMES) > end_frame:
-            break
+        # Calculate start and end frame numbers
+        start_frame = int(start_time * fps)
+        end_frame = int(end_time * fps)
+        print(start_frame)
+        print(end_frame)
+        # Create VideoWriter object
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
-        # Write the frame to the output video
-        out.write(frame)
+        # Set the video capture position to the start frame
+        cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
 
-    # Release video capture and writer objects
-    cap.release()
-    out.release()
+        # Read and write frames until the end frame
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret or cap.get(cv2.CAP_PROP_POS_FRAMES) > end_frame:
+                break
 
-    print("Trimmed video saved at:", output_path)
+            # Write the frame to the output video
+            out.write(frame)
+
+        # Release video capture and writer objects
+        cap.release()
+        out.release()
+
+        print("Trimmed video saved at:", output_path)
 input_video_path = "D:\BE Final Year Project\inputs\eight.mp4"
 output_video_path = "D:\BE Final Year Project\output"
 # start_time_seconds = 10
@@ -62,6 +69,6 @@ video_trimmer = VideoTrimmer(input_video_path)
 for key,value in data.items():
     for item in value:
         filename=f"{item}.mp4"
-        path=os.path.join(output_video_path,key)
+        path=os.path.join(output_video_path,key,filename)
         print("path is is "+ path)
-        video_trimmer.trim_video(item-5, item+5,path)
+        video_trimmer.trim_video(input_video_path,path,item-5, item+5)

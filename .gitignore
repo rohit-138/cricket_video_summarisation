@@ -1,3 +1,2 @@
-*.mp4
-# input_video.mp4
-*.jpg
+/CODE/Storage
+/CODE/runs
