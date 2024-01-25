@@ -18,12 +18,12 @@ class YOLOModelWrapper:
         results = self.model.predict(source="./Storage/extracted_frames", conf=0.4, save_crop=True)
         return results
 
-def main():
-    model_path ="D:\BE Final Year Project\codespace/Model/best.pt"
-    input_source = "./Storage/extracted_frames"
+# def main():
+#     model_path ="D:\BE Final Year Project\codespace/Model/best.pt"
+#     input_source = "./Storage/extracted_frames"
 
-    yolo_wrapper = YOLOModelWrapper(model_path)
-    detection_results = yolo_wrapper.run_detection(input_source)
+#     yolo_wrapper = YOLOModelWrapper(model_path)
+#     detection_results = yolo_wrapper.run_detection(input_source)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
