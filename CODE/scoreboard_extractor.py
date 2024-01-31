@@ -16,6 +16,7 @@ class YOLOModelWrapper:
         
     def  run_detection(self):
         results = self.model.predict(source="./Storage/extracted_frames", conf=0.4, save_crop=True)
+        # print(results)
         return results
 
 # def main():

@@ -15,18 +15,18 @@ class FrameExtractor:
         self.total_frames = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
         self.total_length_seconds = self.total_frames // self.fps
         self.frame_count = 0
-
         self.extracted_frames="./Storage/extracted_frames"
-        if os.path.exists(self.extracted_frames):#if already exists delete
+        if os.path.exists(self.extracted_frames):#if already exists delete it and recreate
             print(f"'{self.extracted_frames}' exists already. Attempting delete!")
             try:
                 # Remove the folder and its contents
                 shutil.rmtree(self.extracted_frames)
-                print(f"Removed older version of '{self.extracted_frames}'")
+                print(f"Removed older version of '{self.extracted_frames}' and recreated it")
+                os.makedirs(self.extracted_frames)
 
             except Exception as e:
                 print(f"Error removing folder '{self.extracted_frames}': {e}")
-        else:
+        else:#recreate path
             os.makedirs(self.extracted_frames)
         print(f"Total video length: {self.total_length_seconds} seconds")
         print(f"FPS OF VIDEO :{self.fps}")

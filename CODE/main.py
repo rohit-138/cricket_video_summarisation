@@ -1,7 +1,7 @@
 from frame_extractor import FrameExtractor
 from text_extractor import TextExtractionUsingOCR
 from scoreboard_extractor import YOLOModelWrapper
-
+from video_editor import VideoEditor
 if __name__ == "__main__":
     video_path = "D:\BE Final Year Project\inputs/nine.mp4"
     # Frame Extraction
@@ -20,6 +20,11 @@ if __name__ == "__main__":
     text_extractor = TextExtractionUsingOCR()
     data=text_extractor.process_frames()
     print(data)
+
+    # data={'fours': [181, 261]}
+    video_trimmer=VideoEditor(video_path)
+    video_trimmer.generate_summary_videos(data,left=20,right=5)
+
 
 
 

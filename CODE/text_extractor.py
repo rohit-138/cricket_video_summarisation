@@ -46,6 +46,7 @@ class TextExtractionUsingOCR:
         columns=['secs','runs','wickets']
 
         df=pd.DataFrame(ocr_data,columns=columns)
+        df.to_csv("ocr_output.csv")
         df['runs'] = pd.to_numeric(df['runs'], errors='coerce')
         df['wickets'] = pd.to_numeric(df['wickets'], errors='coerce')
         df['secs'] = pd.to_numeric(df['secs'], errors='coerce')
@@ -68,5 +69,5 @@ def main():
     #         filename=f"{key}/item"
     #         path=os.path.join(output_video_path,key,value)
     #         video_trimmer.trim_video(item-5, item+5,path)
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
