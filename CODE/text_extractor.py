@@ -56,7 +56,7 @@ class TextExtractionUsingOCR:
         increase_by_4 = df[run_diff == 4]
         increase_by_6 = df[run_diff == 6]
         increase_by_1=df[wickets_diff==1]
-        processed_data={'fours':increase_by_4['secs'].tolist(),'sixes': increase_by_6['secs'].tolist(),'wickets':increase_by_1['secs'].tolist()}
+        processed_data={'fours':increase_by_4['secs'].tolist(),'sixs': increase_by_6['secs'].tolist(),'wickets':increase_by_1['secs'].tolist()}
         return processed_data
 
 # from video_editor import VideoTrimmer

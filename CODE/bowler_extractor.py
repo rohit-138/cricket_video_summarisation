@@ -6,7 +6,7 @@ class YOLOBowlerModelWrapper:
         self.model = YOLO(model_path)
         
     def  run_bowler_detection(self):
-        results = self.model.predict(source="./Storage/extracted_frames",stream=True, conf=0.6,save_crop=True,save=True,project='./Storage/bowler_crop')
+        results = self.model.predict(source="./Storage/extracted_frames",stream=True)
         results_list = []
         for result in results:
             sec = result.path if result.path is not None else None

@@ -2,7 +2,7 @@ import pandas as pd
 class ProcessSummary:
     def generate_summary_data(self,processed_data,intervals):
 
-        final_data={'fours':[],'sixes':[],'wickets':[]}
+        final_data={'fours':[],'sixs':[],'wickets':[]}
 
         for key,value in processed_data.items():
             for switch in value:
@@ -13,7 +13,7 @@ class ProcessSummary:
                         start=i
                     elif switch <= i:
                         stop=i
-                        final_data[key].append((start,stop))
+                        final_data[key].append((start,stop-2))
                         break
         # print(final_data)
         return final_data
@@ -29,7 +29,7 @@ class ProcessSummary:
         increase_by_6 = df[run_diff == 6]
         increase_by_1=df[wickets_diff==1]
         processed_data={'fours':increase_by_4['secs'].tolist(),
-                        'sixes': increase_by_6['secs'].tolist(),
+                        'sixs': increase_by_6['secs'].tolist(),
                         'wickets':increase_by_1['secs'].tolist()
                         }
         df=merged_df
@@ -39,6 +39,7 @@ class ProcessSummary:
         # print(bowler_df)
 
         df = bowler_df.groupby('sec', as_index=False).agg('min')
+        df['sec'] = pd.to_numeric(df['sec'], errors='coerce')
        
         # Calculate the difference between consecutive sec values
         diff = df['sec'].diff()
