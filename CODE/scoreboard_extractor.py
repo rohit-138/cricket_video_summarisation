@@ -1,6 +1,7 @@
 from ultralytics import YOLO
 import os,shutil
-class YOLOModelWrapper:
+import pandas as pd
+class YOLOScorecardModelWrapper:
     def __init__(self, model_path):
         self.model = YOLO(model_path)
         self.model_output="./runs"
@@ -14,17 +15,27 @@ class YOLOModelWrapper:
             except Exception as e:
                 print(f"Error removing folder '{self.model_output}': {e}")
         
-    def  run_detection(self):
+    def  run_scorecard_detection(self):
         results = self.model.predict(source="./Storage/extracted_frames", conf=0.4, save_crop=True)
         # print(results)
-        return results
+        # print(type(results))
+        results_list = []
+        for result in results:
+            sec = result.path if result.path is not None else None
+            scorecard = result.boxes.conf.numel()
+            results_list.append({'sec': sec[-8:-4].split('_')[0],'scorecard':scorecard   })
 
-# def main():
-#     model_path ="D:\BE Final Year Project\codespace/Model/best.pt"
-#     input_source = "./Storage/extracted_frames"
+        # Convert the list of dictionaries to a DataFrame
+        df = pd.DataFrame(results_list)
+        # df.to_csv("./Outputs/CSV/scorecard.csv")
+        return df
 
-#     yolo_wrapper = YOLOModelWrapper(model_path)
-#     detection_results = yolo_wrapper.run_detection(input_source)
+def main():
+    model_path ="D:\BE Final Year Project\workpace/Model/best.pt"
+    input_source = "D:\BE Final Year Project\inputs/nine.mp4"
 
-# if __name__ == "__main__":
-#     main()
+    yolo_wrapper = YOLOScorecardModelWrapper(model_path)
+    detection_results = yolo_wrapper.run_detection(input_source)
+
+if __name__ == "__main__":
+    main()

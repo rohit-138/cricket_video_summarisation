@@ -27,7 +27,7 @@ class VideoEditor:
 # data={'fours': [181, 261, 284, 302, 317, 330, 389, 454, 537, 685, 719, 800, 880, 910, 973], 'sixes': [207, 239, 2452, 255, 263, 269, 286, 291, 351, 520, 745, 793, 871], 'wickets': [349, 406, 552, 606, 822]}
 # data={'fours': [181, 261]}
 # data={'fours': [181, 261], 'sixes': [207, 239], 'wickets': [349, 406, 552]}
-    def generate_summary_videos(self,data,left,right):
+    def generate_summary_videos(self,data):
         # video_trimmer = VideoTrimmer(self.input_video_path)
         print(data)
         for key,value in data.items():
@@ -49,4 +49,13 @@ class VideoEditor:
             for item in value:
 
                 filepath=f"Outputs/{key}/{item}.mp4"
-                self.trim_video(item-left, item+right,filepath)
+                self.trim_video(item[0], item[1],filepath)
+
+def main():
+    video_path = "D:\BE Final Year Project\inputs/nine.mp4"
+    data={'fours': [(198, 217)], 'sixes': [(217, 237)], 'wickets': [(28, 56), (88, 109)]}
+    video_trimmer=VideoEditor(video_path)
+    video_trimmer.generate_summary_videos(data)
+
+if __name__ == "__main__":
+    main()

@@ -15,11 +15,11 @@ class TextExtractionUsingOCR:
             r"C:/Program Files/Tesseract-OCR/tesseract.exe"
         )
 
-    def extract_text(self, image_path):
+    def apply_ocr(self, image_path):
         text = pytesseract.image_to_string(image_path, config="--psm 13")
         return text
 
-    def process_frames(self):
+    def extract_text(self):
         ocr_data=[]
         total_frames = len(
                 [
@@ -35,7 +35,7 @@ class TextExtractionUsingOCR:
         ):
             if frame_name.endswith((".png", ".jpg", ".jpeg")):
                 frame_path = os.path.join(self.folder_path, frame_name)
-                scorecard_text = self.extract_text(frame_path)
+                scorecard_text = self.apply_ocr(frame_path)
                 pattern = r"\b\s*\d+\s*-\s*\d+\b"
                 match = re.findall(pattern, scorecard_text)
                 if len(match)>0:
@@ -47,6 +47,7 @@ class TextExtractionUsingOCR:
 
         df=pd.DataFrame(ocr_data,columns=columns)
         df.to_csv("ocr_output.csv")
+        return df
         df['runs'] = pd.to_numeric(df['runs'], errors='coerce')
         df['wickets'] = pd.to_numeric(df['wickets'], errors='coerce')
         df['secs'] = pd.to_numeric(df['secs'], errors='coerce')
@@ -59,10 +60,10 @@ class TextExtractionUsingOCR:
         return processed_data
 
 # from video_editor import VideoTrimmer
-def main():
-    textextractor = TextExtractionUsingOCR()
-    data=textextractor.process_frames()
-    print(data)
+# def main():
+#     textextractor = TextExtractionUsingOCR()
+#     data=textextractor.process_frames()
+#     print(data)
     # video_trimmer = VideoTrimmer(input_video_path, output_video_path)
     # for key,value in data.items():
     #     for item in value:
