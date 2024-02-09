@@ -13,18 +13,6 @@ class YOLOBowlerModelWrapper:
             bowler = result.boxes.conf.numel()
             results_list.append({'sec': sec[-8:-4].split('_')[0],'bowler':bowler   })
 
-
         # Convert the list of dictionaries to a DataFrame
         df = pd.DataFrame(results_list)
-        # df.to_csv("./Outputs/CSV/bowler.csv")
         return df
-
-# def main():
-#     model_path ="D:\BE Final Year Project\codespace/Model/best.pt"
-#     input_source = "./Storage/extracted_frames"
-
-#     yolo_wrapper = YOLOModelWrapper(model_path)
-#     detection_results = yolo_wrapper.run_detection(input_source)
-
-# if __name__ == "__main__":
-#     main()
