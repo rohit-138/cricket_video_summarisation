@@ -43,35 +43,24 @@ class FrameExtractor:
             ret, frame = self.cap.read()
             if not ret:
                 break
-            
             frame_filename = os.path.join(self.extracted_frames, f"frame_{self.frame_count:04d}.jpg")
             cv2.imwrite(frame_filename, frame)
-
             self.frame_count += 1
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_count * self.fps)
-
             progress_bar.update(1)
-
         progress_bar.close()
         self.cap.release()
     def extract_frames_by_framecount(self, frames_to_extract):
-        
         progress_bar = tqdm(total=frames_to_extract, desc="Extracting Frames")
-
         while self.frame_count < frames_to_extract:
             ret, frame = self.cap.read()
-
             if not ret:
                 break
-
             frame_filename = os.path.join(self.extracted_frames, f"frame_{self.frame_count:04d}.jpg")
             cv2.imwrite(frame_filename, frame)
-
             self.frame_count += 1
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_count * self.fps)
-
             progress_bar.update(1)
-
         progress_bar.close()
         self.cap.release()
 
