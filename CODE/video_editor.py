@@ -33,17 +33,17 @@ class VideoEditor:
                     transition_animation = transition_animation.resize(width=clip.size[0], height=clip.size[1])
                     allclips.append(transition_animation)
                     allclips.append(clip)
-                    clip.close()
+                    # clip.close()
             final_clip=concatenate_videoclips(allclips)  
             final_clip.write_videofile("./Outputs/full_length_output.mp4") 
             
 
         except Exception as e:
             print(f"Error:{e}")
-        finally:
-            clip.close()
-            final_clip.close()
-            transition_animation.close()
+        # finally:
+        #     clip.close()
+        #     final_clip.close()
+        #     transition_animation.close()
     def generate_summary_videos(self):
 
         for key,value in self.data.items():

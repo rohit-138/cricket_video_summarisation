@@ -7,7 +7,6 @@ from bowler_extractor import YOLOBowlerModelWrapper
 from video_editor import VideoEditor
 from process_summary import ProcessSummary
 import time
-
 if __name__ == "__main__":
     start_time=time.time()
     video_path = "D:\BE Final Year Project\inputs/nine.mp4"

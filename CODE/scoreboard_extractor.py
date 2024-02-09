@@ -16,7 +16,7 @@ class YOLOScorecardModelWrapper:
                 print(f"Error removing folder '{self.model_output}': {e}")
         
     def  run_scorecard_detection(self):
-        results = self.model.predict(source="./Storage/extracted_frames", conf=0.4, save_crop=True)
+        results = self.model.predict(source="./Storage/extracted_frames", conf=0.7, save_crop=True)
         # print(results)
         # print(type(results))
         results_list = []
