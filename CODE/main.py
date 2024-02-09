@@ -20,20 +20,19 @@ if __name__ == "__main__":
     print("*****step 1 ******")
     s1_start_time=time.time()
     frame_extractor = FrameExtractor(video_path)
-    # frame_extractor.extract_frames_by_framecount(5)#enter appropriate frame count
     frame_extractor.extract_frames_by_percentage()
     print("Frames extracted successfully.")
     s1_end_time=time.time()
-    
-    #finding Scoreboard using yolo
+
     s2_start_time=time.time()
+    #Scoreboard extraction
     print("*****step 2******")
 
     yolo_wrapper = YOLOScorecardModelWrapper(scorecard_model_path)
     scorecard_df = yolo_wrapper.run_scorecard_detection()
 
     s2_end_time=time.time()
-
+    #Bowler Detection
     print("*****step 3 ******")
 
     s3_start_time=time.time()
@@ -41,25 +40,29 @@ if __name__ == "__main__":
     bowler_df = yolo_wrapper.run_bowler_detection()
 
     merged_df=pd.merge(scorecard_df,bowler_df,on='sec',how='inner')
-    #getting text from scoreboard
     merged_df.to_csv("./Outputs/CSV/merged_df.csv")
     s3_end_time=time.time()
+    #Text Extraction
     print("*****step 4 ******")
-
     s4_start_time=time.time()
 
     text_extractor = TextExtractionUsingOCR()
     df=text_extractor.extract_text()
     df.to_csv('./Outputs/CSV/ocr_data.csv')
 
-
     s4_end_time=time.time()
-    print("*****step 5 ******")
 
+
+    #processing dataframes
+    print("*****step 5 ******"
     s5_start_time=time.time()
     data=ProcessSummary().process_summary(df,merged_df)
     print(data)
     s5_end_time=time.time()
+
+
+
+    #generating summary
     print("*****step 6 ******")
 
     s6_start_time=time.time()
@@ -67,8 +70,6 @@ if __name__ == "__main__":
     video_trimmer.generate_summary_videos()
     video_trimmer.generate_full_summary()
     s6_end_time=time.time()
-
-
     end_time=time.time()
 
     Total_time=end_time-start_time
