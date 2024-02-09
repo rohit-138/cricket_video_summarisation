@@ -1,7 +1,10 @@
-import cv2#frame extraction
-import os,shutil
+import cv2
+import os
+import shutil
 from tqdm import tqdm
-
+import threading
+from collections import deque
+from utils import Utility
 class FrameExtractor:
     def __init__(self, video_path):
         self.video_path = video_path
@@ -28,7 +31,7 @@ class FrameExtractor:
                 print(f"Error removing folder '{self.extracted_frames}': {e}")
         else:#recreate path
             os.makedirs(self.extracted_frames)
-        print(f"Total video length: {self.total_length_seconds} seconds")
+        print(f"Total video length: {Utility().convertSecondstoHoursMinutesSeconds(self.total_length_seconds)}")
         print(f"FPS OF VIDEO :{self.fps}")
 
     def extract_frames_by_percentage(self, percentage=100):
@@ -37,30 +40,55 @@ class FrameExtractor:
 
         frames_to_extract = int(self.total_length_seconds * (percentage / 100))
         progress_bar = tqdm(total=frames_to_extract, desc="Extracting Frames")
-        # print(f" frames_to_extract: {frames_to_extract}")
+
+        batch_size = 200  # Adjust batch size as needed
+        frames_queue = deque(maxlen=batch_size)
+        frames_written = 0
+
+        progress_bar = tqdm(total=frames_to_extract, desc="Extracting Frames")
+
+        def write_frames():
+            nonlocal frames_written
+            while frames_written < frames_to_extract:
+                if frames_queue:
+                    frame = frames_queue.popleft()
+                    frame_filename = os.path.join(self.extracted_frames, f"frame_{frames_written:04d}.jpg")
+                    cv2.imwrite(frame_filename, frame)
+                    frames_written += 1
+                    progress_bar.update(1)
+
+        write_thread = threading.Thread(target=write_frames)
+        write_thread.start()
 
         while self.frame_count < frames_to_extract:
             ret, frame = self.cap.read()
             if not ret:
                 break
-            frame_filename = os.path.join(self.extracted_frames, f"frame_{self.frame_count:04d}.jpg")
-            cv2.imwrite(frame_filename, frame)
+            frames_queue.append(frame)
             self.frame_count += 1
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_count * self.fps)
-            progress_bar.update(1)
+
+        write_thread.join()
         progress_bar.close()
         self.cap.release()
     def extract_frames_by_framecount(self, frames_to_extract):
+        
         progress_bar = tqdm(total=frames_to_extract, desc="Extracting Frames")
+
         while self.frame_count < frames_to_extract:
             ret, frame = self.cap.read()
+
             if not ret:
                 break
+
             frame_filename = os.path.join(self.extracted_frames, f"frame_{self.frame_count:04d}.jpg")
             cv2.imwrite(frame_filename, frame)
+
             self.frame_count += 1
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frame_count * self.fps)
+
             progress_bar.update(1)
+
         progress_bar.close()
         self.cap.release()
 

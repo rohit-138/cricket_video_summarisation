@@ -41,9 +41,9 @@ class VideoEditor:
         except Exception as e:
             print(f"Error:{e}")
         # finally:
-        #     clip.close()
-        #     final_clip.close()
-        #     transition_animation.close()
+            # clip.close()
+            # final_clip.close()
+            # transition_animation.close()
     def generate_summary_videos(self):
 
         for key,value in self.data.items():
