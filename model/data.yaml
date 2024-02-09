@@ -1,0 +1,7 @@
+# path: ../datasets/roboflow
+
+train: /content/drive/MyDrive/DATASET/bowlerDetection/train/images/
+val: /content/drive/MyDrive/DATASET/bowlerDetection/valid/images/
+test: /content/drive/MyDrive/DATASET/bowlerDetection/test/images/
+
+names: ["bowler"]

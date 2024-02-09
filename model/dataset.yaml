@@ -1,0 +1,7 @@
+# Train/val/test sets as
+
+train: /content/yolo_data/images/train 
+val: /content/yolo_data/images/val
+# Classes
+nc: 1 # number of classes
+names: ['scorecard'] # class names
